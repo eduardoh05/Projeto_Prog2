@@ -1,0 +1,41 @@
+Ocorrencias - 
+	Tipo Policia: Regular.
+	Descricao: Roubo - Rua Fernando de Albuquerque,23.
+	Policiais:
+		- Cobra;
+		- Aguia;
+		- Leao;
+	Presos:
+		- João da Silva, 12345678900;
+		
+	Tipo Policia: Especializada.
+	Descricao: Briga generalizada - Rua Afonso Pena,15.
+	Policiais:
+		- Pantera;
+		- Lobo;
+		- Lince;
+		- Cobra;
+	Presos:
+		- Carlos Santos, 11122233344;
+		- Rafael Pereira, 22233344455;
+		
+	Tipo Policia: Regular.
+	Descricao: Discussão Vizinhos - Rua Joaquim Pereira, 42.
+	Policiais:
+		- Aguia;
+		- Cobra;
+	
+	Tipo Policia: Regular.
+	Descricao: Som Alto - Rua Walter Luiz,06.
+	Policiais:
+		- Falcao;
+		- Aguia;
+		- Cobra;
+	
+	Tipo Policia: Regular.
+	Descricao: Homicídio - Rua Santo Amaro,88.
+	Policiais:
+		- Aguia;
+		- Tigre;
+	Presos:
+		- Ana Costa, 99988877766;
