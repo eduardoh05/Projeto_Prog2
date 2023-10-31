@@ -4,9 +4,21 @@
 #define MAX 30
 
 //Função para pesquisar CPF
-
-void pesquisa_cpf (FILE *file, int cpf){
+void pesquisa_cpf (FILE *file, char *cpf){
+    char *nome;
+    
     file = fopen("pessoas.txt", "r");
+
+    if (file == NULL)
+    {
+        printf("Erro ao acessar o banco de dados.");
+    }
+    else
+    {
+        fscanf(file, "%s %s", nome,cpf);  
+    }
+
+    fclose(file);
 };
 
 
