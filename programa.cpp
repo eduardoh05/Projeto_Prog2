@@ -62,71 +62,72 @@ int main(){
             */
 
         
-        //Essa é a opção caso não seja necessário diferenciar as viaturas.  
-        //ETAPA 2
-        //Necessário validar com o arquivo viaturas.txt? Acredito que seja.
-        printf("Código da Viatura: ");
-        scanf("%d", &cod_viatura);
-        printf("Quantidade de PMs: ");
-        scanf("%d", &qtd_pms);
+            //Essa é a opção caso não seja necessário diferenciar as viaturas.  
+            //ETAPA 2
+            //Necessário validar com o arquivo viaturas.txt? Acredito que seja.
+            printf("Código da Viatura: ");
+            scanf("%d", &cod_viatura);
+            printf("Quantidade de PMs: ");
+            scanf("%d", &qtd_pms);
 
-        if (op == 1){
+            if (op == 1){
 
-            if (qtd_pms < 2 || qtd_pms > 4)
-            {
-                printf("Solicitação de embarque negada.\n");
-                break;
-            }
-            else
-            {
-                //Declarando o registro com o número de PMs digitado;
-                struct Tipo_pms PMS[qtd_pms];
+                if (qtd_pms < 2 || qtd_pms > 4)
+                {
+                    printf("Solicitação de embarque negada.\n");
+                    continue;
+                }
+                else
+                {
+                    //Declarando o registro com o número de PMs digitado;
+                    struct Tipo_pms PMS[qtd_pms];
 
-                printf("Identificação dos PMs:\n");
-                
-                //For usado para digitar o nome dos PMs e armazenar no registro.
-                for (int i = 0; i < qtd_pms; i++){
-                    scanf(" %[^\n]", PMS[i].nome_de_guerra);
-                    printf("%s\n", PMS[i].nome_de_guerra);
+                    printf("Identificação dos PMs:\n");
+                    
+                    //For usado para digitar o nome dos PMs e armazenar no registro.
+                    for (int i = 0; i < qtd_pms; i++){
+                        scanf(" %[^\n]", PMS[i].nome_de_guerra);
+                        printf("%s\n", PMS[i].nome_de_guerra);
+                    }
                 }
             }
-        }
 
-        if (op == 2){
-            if (qtd_pms < 4)
-            {
-                printf("Solicitação de embarque negada.\n");
-            }
-            else
-            {
-                //Declarando o registro com o número de PMs digitado;
-                struct Tipo_pms PMS[qtd_pms];
+            if (op == 2){
+                if (qtd_pms < 4)
+                {
+                    printf("Solicitação de embarque negada.\n");
+                    continue;
+                }
+                else
+                {
+                    //Declarando o registro com o número de PMs digitado;
+                    struct Tipo_pms PMS[qtd_pms];
 
-                printf("Identificação dos PMs:\n");
-                
-                //For usado para digitar o nome dos PMs e armazenar no registro.
-                for (int i = 0; i < qtd_pms; i++){
-                    scanf(" %[^\n]", PMS[i].nome_de_guerra);
-                    printf("%s\n", PMS[i].nome_de_guerra);
+                    printf("Identificação dos PMs:\n");
+                    
+                    //For usado para digitar o nome dos PMs e armazenar no registro.
+                    for (int i = 0; i < qtd_pms; i++){
+                        scanf(" %[^\n]", PMS[i].nome_de_guerra);
+                        printf("%s\n", PMS[i].nome_de_guerra);
+                    }
                 }
             }
-        }
-        
-        //ETAPA 3
-        printf("\n1 - Apto para atender ocorrência");
-        printf("\n2 - Cancelar Embarcação\n");
-        printf("Opcao: ");
-        scanf("%d", &op);
-
-        if (op == 1){
             
-        }
-        else{
-            continue;
-        }
-        
+            //ETAPA 3
+            printf("\n1 - Apto para atender ocorrência");
+            printf("\n2 - Cancelar Embarcação\n");
+            printf("Opcao: ");
+            scanf("%d", &op);
 
-        }
+            if (op == 1){
+                
+            }
+            else{
+                continue;
+            }
+            
+
+            }
     
     }while (op != 0);
     
