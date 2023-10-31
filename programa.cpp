@@ -3,13 +3,26 @@
 #include <string.h>
 #define MAX 30
 
+//Função para pesquisar CPF
+
+void pesquisa_cpf (FILE *file, int cpf){
+    file = fopen("pessoas.txt", "r");
+};
+
+
+
 struct Tipo_pms{
     char nome_de_guerra[MAX+1];
 };
 
 int main(){
+    //Declaração usada para usar as opções.
     int op;
+    
+    //Declaração do CPF para usar na função Pesquisar por CPF.
     int cpf_pessoa;
+    //Declaração do arquivo FILE para manipular arquivo.
+    FILE *file;
     do{
         printf("\n1 - Viatura Login");
         printf("\n2 - Viatura em uso");
@@ -24,7 +37,9 @@ int main(){
         if (op == 1)
         {
             int qtd_pms, cod_viatura;
-            bool chamada_policial = false;
+            
+            //Inicialização com true para testar a função de BUSCA DE CPF.
+            bool chamada_policial = true;
 
             //ETAPA 1
             printf("\nPolicia Regular - 1");
@@ -126,7 +141,7 @@ int main(){
                 if(chamada_policial == false){    
                     printf("\nViatura direcionada para rondas, no aguardo de chamadas policiais.");
                     printf("\n1 - Voltar para o Menu Principal");
-                    printf("Opcao: ");
+                    printf("\nOpcao: ");
                     scanf("%d", &op);
 
                     if (op == 1)
@@ -154,10 +169,14 @@ int main(){
 
                         switch (op)
                         {
+                            //Manipulação do arquivo pessoas.txt
                             case 1:
                                 printf("\nCPF: ");
                                 scanf("%d", &cpf_pessoa);
                                 
+                                //Enquanto a função não estiver pronta.
+                                continue;
+
 
                         }
 
