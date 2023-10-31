@@ -9,6 +9,7 @@ struct Tipo_pms{
 
 int main(){
     int op;
+    int cpf_pessoa;
     do{
         printf("\n1 - Viatura Login");
         printf("\n2 - Viatura em uso");
@@ -23,6 +24,7 @@ int main(){
         if (op == 1)
         {
             int qtd_pms, cod_viatura;
+            bool chamada_policial = false;
 
             //ETAPA 1
             printf("\nPolicia Regular - 1");
@@ -120,14 +122,60 @@ int main(){
             scanf("%d", &op);
 
             if (op == 1){
-                
+                //Caso em que não há chamadas policiais.
+                if(chamada_policial == false){    
+                    printf("\nViatura direcionada para rondas, no aguardo de chamadas policiais.");
+                    printf("\n1 - Voltar para o Menu Principal");
+                    printf("Opcao: ");
+                    scanf("%d", &op);
+
+                    if (op == 1)
+                        continue;
+                }
+                //Criação do menu, caso haja chamadas policiais. As infos devem vir de outro lugar, acredito.
+                else{
+                    printf("\nDescrição: ");
+                    printf("\nLocalização: \n");
+
+                    printf("\n1 - Confirmada Ação Policial");
+                    printf("\n2 - Ação Policial Dispensada\n");
+                    
+                    printf("Opcao: ");
+                    scanf("%d", &op);
+
+                    //Caso em que a Ação Policial é confirmada. Tentativa de usar SWITCH
+                    switch (op)
+                    {
+                    case 1:
+                        printf("\n1 - Pesquisar por CPF");
+                        printf("\n2 - Solicitar Reforços");
+                        printf("\n3 - Prisão em Andamento");
+                        printf("\n4 - Encerrar Ocorrência");
+
+                        switch (op)
+                        {
+                            case 1:
+                                printf("\nCPF: ");
+                                scanf("%d", &cpf_pessoa);
+                                
+
+                        }
+
+                    //Precisa ser consertado pois, após apertar 2, o programa deveria voltar para a etapa 3, não para o menu inicial.
+                    case 2:
+                        continue;
+                    }
+                }
             }
+
             else{
                 continue;
             }
             
 
-            }
+        }
+
+
     
     }while (op != 0);
     
