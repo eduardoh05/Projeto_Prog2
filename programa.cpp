@@ -3,9 +3,22 @@
 #include <string.h>
 #define MAX 30
 
+
+struct Tipo_Pessoa{
+    char nome[40];
+    int cpf;
+    char cidade[40];
+    int idade;
+    int passagens;
+    int inadimplencias;
+    char nome_inadimplencia[40];
+};
+
+
 //Função para pesquisar CPF
 void pesquisa_cpf (FILE *file, char *cpf){
-    char *nome;
+    char *nome, *cidade, *nome_inadimplencias;
+    int idade, passagens, inadimplencias;
     
     file = fopen("pessoas.txt", "r");
 
@@ -15,7 +28,20 @@ void pesquisa_cpf (FILE *file, char *cpf){
     }
     else
     {
-        fscanf(file, "%s %s", nome,cpf);  
+        fscanf(file, "%s", nome);
+        fscanf(file, "%s", cidade);
+        fscanf(file, "%d", &idade);
+        fscanf(file, "%d", &passagens);
+        fscanf(file, "%d", &inadimplencias);
+        fscanf(file, "%s", nome_inadimplencias);
+
+        char nome[40];
+    int cpf;
+    char cidade[40];
+    int idade;
+    int passagens;
+    int inadimplencias;
+    char nome_inadimplencia[40];
     }
 
     fclose(file);
