@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 void inserir(lista*& lst, void* chave){
-    lista *p; //
+    lista *p; // ta certo mesmo? 
     lista* novo = (lista*)calloc(1, sizeof(lista));
     novo->chave = chave;
     novo->prox = NULL;
@@ -15,5 +15,17 @@ void inserir(lista*& lst, void* chave){
         // for(lista *p = lst; p->prox!=NULL; p = p->prox);
         for(p = lst; p->prox!=NULL; p = p->prox);
         p->prox = novo;
+    }
+}
+
+void inserirComeco(lista*& lst, void* chave){
+    lista* novo = (lista*)calloc(1, sizeof(lista));
+    novo->chave = chave;
+    if (lst == NULL){
+        lst = novo;
+        lst->prox = NULL;
+    } else {
+        novo->prox = lst;
+        lst = novo;
     }
 }

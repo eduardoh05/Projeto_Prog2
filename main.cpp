@@ -122,18 +122,31 @@ viatura* buscaViatura(lista* lst, int cod){
     return NULL;
 }
 
-// policial* buscaPolicial(lista* lst, char nomeGuerra){
+policial* buscaPolicial(lista* lst, char *nomeGuerra){
+    lista *p = lst;
+    for (; p != NULL; p = p->prox){
+        // se nomeGuerra existir na lista de policiais
+        if (strcmp(((policial*)p->chave)->codigo, nomeGuerra) == 0){
+            return (policial*)p->chave;
+        }
+    }
 
-// }
+    return NULL;
+}
 
 int main(){
     //Declaração usada para usar as opções.
+    lista* listaChamadasP = NULL;
+    lista* listaChamadasNP = NULL;
     lista* listaViatura = NULL;
-    //lista* listaPMs = NULL;
+    lista* listaPMs = NULL;
     //lista* listaPessoa = NULL;
     int op;
     
+    lerPoliciais(listaPMs);
     lerViaturas(listaViatura);
+    //lerPessoas(listaPessoa);
+
     //Declaração do CPF para usar na função Pesquisar por CPF.
     int cpf_pessoa;
 
@@ -166,15 +179,16 @@ int main(){
             
             if (op == 1)
             {   
+                viatura* temp;
                 // validar codigo da viatura regular
                 while (1)
                 {
                     //Necessário validar com o arquivo viaturas.txt? Acredito que seja. -sim
                     printf("Código da Viatura: ");
                     scanf("%d", &cod_viatura);
-                    
+                    temp = (buscaViatura(listaViatura, cod_viatura));
                     // se existir mas nao for regular??
-                    viatura* temp = (buscaViatura(listaViatura, cod_viatura));
+                    
                     if(temp != NULL){
                         if (temp->tipoBool == 1) // 1 para regular
                             break;
@@ -196,11 +210,18 @@ int main(){
                 printf("Identificação dos PMs:\n");
                 //ponteiro da lista geral aponta para a listaPolicial ou para a geral?
                 //tarefa: fazer verificacao com o banco de dados em .txt (nao eh certeza)
-                // for (lista *p = listaViatura; p != NULL; p = p->prox)
-                // {
-                //     scanf(" %[^\n]", ((viatura*)p->chave)->policiais);
-                //     printf("%s\n", ((viatura*)p->chave)->policiais);
-                // }   
+                int i = 0;
+                char nome_de_guerra[MAX+1];
+                while (i < qtd_pms){
+                    scanf(" %[^\n]", nome_de_guerra);
+                    if(buscaPolicial(listaPolicial, nome_de_guerra)){
+                        strcpy(temp->policiais[i], nome_de_guerra);
+                        i++;
+                        printf("%d nome válido\n", i);
+                    } else 
+                        printf("Nome inválido\n");
+                }
+
                 op = 1;             
             }
 
@@ -208,13 +229,17 @@ int main(){
                 printf("Quantidade de PMs: 4 (especial)\n");
                 qtd_pms = 4;
                 printf("Identificação dos PMs:\n");
-                //ponteiro da lista geral aponta para a listaPolicial ou para a geral?
-                //tarefa: fazer verificacao com o banco de dados em .txt (nao eh certeza)
-                // for (lista *p = lst; p != NULL; p = p->prox)
-                // {
-                //     scanf(" %[^\n]", ((viatura*)p->chave)->policiais);
-                //     printf("%s\n", ((viatura*)p->chave)->policiais);
-                // } 
+                int i = 0;
+                char nome_de_guerra[MAX+1];
+                while (i < qtd_pms){
+                    scanf(" %[^\n]", nome_de_guerra);
+                    if(buscaPolicial(listaPolicial, nome_de_guerra)){
+                        strcpy(temp->policiais[i], nome_de_guerra)
+                        i++;
+                        printf("%d nome válido\n", i);
+                    } else 
+                        printf("Nome inválido\n");
+                }
                 op = 2;
             }
             
@@ -222,7 +247,7 @@ int main(){
             printf("\n1 - Apto para atender ocorrência");
             printf("\n2 - Cancelar Embarcação\n");
             printf("Opcao: ");
-            // mesma variavel para submenu dá conflito??
+            // mesma variavel para submenu dá conflito?? nao, mas ao fim de todo caso, retornar op ao valor inicial.
             scanf("%d", &op);
 
             if (op == 1){
@@ -283,6 +308,39 @@ int main(){
             }
 
             op = 1;
+
+        // COPOM
+        } else if (op == 3){
+            // 1. verificar se ha pedido de reforco
+
+            //cadastrar chamada
+            chamada aux; 
+            
+            printf("Policia normal - 1  Especializada - 2: ");
+            scanf("%d", &aux.tipo);
+            printf("Viaturas necessárias: ");
+            scanf("%d", &aux.qtd_viaturas);
+            printf("Descrição: ");
+            scanf(" %[^\n]", aux.desc);
+            printf("Localização: ");
+            scanf(" %[^\n]", aux.local);
+
+            // se for policiar regular (prioritaria ou nao)
+            if (aux.tipo == 1){
+                printf("Prioritaria - 1 Nao prioritaria - 2:")
+                scanf("%d", &op);
+                // regular prioritaria
+                if (op == 1)
+                    inserir(listaChamadasP, aux);
+                else
+                    inserir(listaChamadaNP, aux);
+
+                op = 3;
+            // se for policia especializada
+            } else {
+                inserir(listaChamadasP, aux);
+            }
+            
         }
 
     }while (op != 0);
