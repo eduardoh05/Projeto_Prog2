@@ -126,7 +126,7 @@ policial* buscaPolicial(lista* lst, char *nomeGuerra){
     lista *p = lst;
     for (; p != NULL; p = p->prox){
         // se nomeGuerra existir na lista de policiais
-        if (strcmp(((policial*)p->chave)->codigo, nomeGuerra) == 0){
+        if (strcmp(((policial*)p->chave)->nome_de_guerra, nomeGuerra) == 0){
             return (policial*)p->chave;
         }
     }
@@ -208,13 +208,14 @@ int main(){
                 } 
 
                 printf("Identificação dos PMs:\n");
-                //ponteiro da lista geral aponta para a listaPolicial ou para a geral?
+                //ponteiro da lista geral aponta para a listaPMS ou para a geral?
                 //tarefa: fazer verificacao com o banco de dados em .txt (nao eh certeza)
                 int i = 0;
                 char nome_de_guerra[MAX+1];
                 while (i < qtd_pms){
                     scanf(" %[^\n]", nome_de_guerra);
-                    if(buscaPolicial(listaPolicial, nome_de_guerra)){
+                    if(buscaPolicial(listaPMs, nome_de_guerra)){
+                        //antigo: strcpy((temp->policiais)->nome_de_guerra[i], nome_de_guerra);
                         strcpy(temp->policiais[i], nome_de_guerra);
                         i++;
                         printf("%d nome válido\n", i);
@@ -233,7 +234,7 @@ int main(){
                 char nome_de_guerra[MAX+1];
                 while (i < qtd_pms){
                     scanf(" %[^\n]", nome_de_guerra);
-                    if(buscaPolicial(listaPolicial, nome_de_guerra)){
+                    if(buscaPolicial(listaPMs, nome_de_guerra)){
                         strcpy(temp->policiais[i], nome_de_guerra)
                         i++;
                         printf("%d nome válido\n", i);
@@ -314,26 +315,26 @@ int main(){
             // 1. verificar se ha pedido de reforco
 
             //cadastrar chamada
-            chamada aux; 
+            chamada *aux; 
             
             printf("Policia normal - 1  Especializada - 2: ");
-            scanf("%d", &aux.tipo);
+            scanf("%d", &aux->tipo);
             printf("Viaturas necessárias: ");
-            scanf("%d", &aux.qtd_viaturas);
+            scanf("%d", &aux->qtd_viaturas);
             printf("Descrição: ");
-            scanf(" %[^\n]", aux.desc);
+            scanf(" %[^\n]", aux->desc);
             printf("Localização: ");
-            scanf(" %[^\n]", aux.local);
+            scanf(" %[^\n]", aux->local);
 
             // se for policiar regular (prioritaria ou nao)
-            if (aux.tipo == 1){
-                printf("Prioritaria - 1 Nao prioritaria - 2:")
+            if (aux->tipo == 1){
+                printf("Prioritaria - 1 Nao prioritaria - 2:");
                 scanf("%d", &op);
                 // regular prioritaria
                 if (op == 1)
                     inserir(listaChamadasP, aux);
                 else
-                    inserir(listaChamadaNP, aux);
+                    inserir(listaChamadasNP, aux);
 
                 op = 3;
             // se for policia especializada
@@ -346,5 +347,8 @@ int main(){
     }while (op != 0);
 
     //desalocar
-
+    desalocar(listaChamadasP);
+    desalocar(listaChamadasNP);
+    desalocar(listaViatura);
+    desalocar(listaPMs);
 }

@@ -29,3 +29,13 @@ void inserirComeco(lista*& lst, void* chave){
         lst = novo;
     }
 }
+
+void desalocar(lista*& lst){
+    lista *aux;
+    while (lst != NULL){
+        aux = lst;
+        lst = lst->prox;
+        free(aux->chave);
+        free(aux);
+    }
+}

@@ -19,7 +19,7 @@ struct policial{
 struct viatura{
     int codigo;
     bool tipoBool;
-    policial policiais[4];
+    char policiais[4][MAX+1];
     char tipo[15];
 };
 
@@ -32,4 +32,5 @@ struct chamada{
 
 
 void inserir(lista*& lst, void* chave);
-
+void inserirComeco(lista*& lst, void* chave);
+void desalocar(lista*& lst);
