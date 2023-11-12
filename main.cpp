@@ -4,60 +4,16 @@
 #include "lib_lista.h"
 #define MAX 30
 
-struct Tipo_Pessoa{
-    char nome[40];
-    int cpf;
-    char cidade[40];
-    int idade;
-    int passagens;
-    int inadimplencias;
-    char nome_inadimplencia[40];
-};
-
-//Função para pesquisar CPF
-// void pesquisa_cpf (FILE *file, char *cpf){
-//     char *nome, *cidade, *nome_inadimplencias;
-//     int idade, passagens, inadimplencias;
-
-   
-    
-//     file = fopen("pessoas.txt", "r");
-
-//     if (file == NULL)
-//     {
-//         printf("Erro ao acessar o banco de dados.");
-//     }
-//     else
-//     {
-//         fscanf(file, "%s", nome);
-//         fscanf(file, "%s", cidade);
-//         fscanf(file, "%d", &idade);
-//         fscanf(file, "%d", &passagens);
-//         fscanf(file, "%d", &inadimplencias);
-//         fscanf(file, "%s", nome_inadimplencias);
-
-//         char nome[40];
-//         int cpf;
-//         char cidade[40];
-//         int idade;
-//         int passagens;
-//         int inadimplencias;
-//         char nome_inadimplencia[40];
-//     }
-
-//     fclose(file);
-// };
-
 void lerViaturas(lista*& lst){
     FILE* arq = fopen("./arquivosEntrada/viaturas.txt", "r");
     int id_aux;
-    bool tipo_aux = 0;
     char esp[14];
 
     viatura* aux;
     while(feof(arq) == 0){
+        bool tipo_aux = 0;
         fscanf(arq, "%d", &id_aux);
-        fscanf(arq, " %[^\n]", esp);
+        fscanf(arq, " %s", esp);
         if (strcmp(esp, "regular") == 0){
             tipo_aux = 1;
         } 
@@ -107,6 +63,52 @@ void lerPoliciais(lista*& lst){
     }
 }
 
+void lerPessoas(lista *&lst){
+    FILE* file = fopen("./arquivosEntrada/pessoas.txt", "r");
+
+    char nome[MAX+1]; 
+    char cpf[12]; 
+    char cidade[MAX+1]; 
+    char inadimplencias[3][MAX+1]; 
+    char passagens[3][MAX+1];
+    int idade, qtdPassagens, qtdInad;
+    pessoa *aux;
+
+    if (file == NULL){
+        printf("Erro ao acessar o banco de dados.");
+        return;
+    } else {    
+        while (feof(file) == 0){
+            fscanf(file, " %[^\n]", nome);
+            fscanf(file, " %s", cpf);
+            fscanf(file, " %[^\n]", cidade);
+            fscanf(file, "%d", &idade);
+            fscanf(file, "%d", &qtdPassagens);
+            for (int i = 0; i < qtdPassagens; i++)
+                fscanf(file, " %[^\n]", passagens[i]);
+            
+            fscanf(file, "%d", &qtdInad);
+            for (int i = 0; i < qtdInad; i++)
+                fscanf(file, " %[^\n]", inadimplencias[i]);
+
+            aux = (pessoa*) calloc(1, sizeof(pessoa));
+            strcpy(aux->nome, nome);
+            strcpy(aux->cpf, cpf);
+            strcpy(aux->cidade, cidade);
+            aux->idade = idade;
+            aux->qtdPassagens = qtdPassagens;
+            aux->qtdInad = qtdInad;
+
+            for (int i = 0; i < qtdPassagens; i++)
+                strcpy(aux->passagens[i], passagens[i]);
+            for (int i = 0; i < qtdInad; i++)
+                strcpy(aux->inadimplencias[i], inadimplencias[i]);
+            
+            inserir(lst, aux);
+        }
+    }
+    fclose(file);
+}
 
 // se for int (caso de retornar o codigo), nao é possivel acessar outros dados dessa viatura
 // return ((viatura*)p->chave)->codigo;
@@ -122,7 +124,7 @@ viatura* buscaViatura(lista* lst, int cod){
     return NULL;
 }
 
-policial* buscaPolicial(lista* lst, char *nomeGuerra){
+policial* buscaPolicial(lista *lst, char *nomeGuerra){
     lista *p = lst;
     for (; p != NULL; p = p->prox){
         // se nomeGuerra existir na lista de policiais
@@ -134,18 +136,38 @@ policial* buscaPolicial(lista* lst, char *nomeGuerra){
     return NULL;
 }
 
+void buscaCPF(lista *lst, char *cpf){
+    lista *p = lst;
+    for (; p != NULL; p = p->prox){
+        if (strcmp(((pessoa*)p->chave)->cpf, cpf) == 0){
+            printf("Nome: %s\n", ((pessoa*)p->chave)->nome);
+            printf("CPF: %s\n", ((pessoa*)p->chave)->cpf);
+            printf("Cidade: %s\n", ((pessoa*)p->chave)->cidade);
+            printf("Idade: %d\n", ((pessoa*)p->chave)->idade);
+            printf("Quantidade de passagens: %d\n", ((pessoa*)p->chave)->qtdPassagens);
+            for (int i = 0; i < qtdPassagens; i++)
+                printf("%s\n", ((pessoa*)p->chave)->passagens[i]);
+            printf("Quantidade de inadimplencias: %d\n", ((pessoa*)p->chave)->qtdInad);
+            for (int i = 0; i < qtdPassagens; i++)
+                printf("%s\n", ((pessoa*)p->chave)->inadimplencias[i]);
+            return;
+        }
+    }
+    if (p == NULL)
+        printf("CPF nao encontrado.\n");
+}
+
 int main(){
-    //Declaração usada para usar as opções.
     lista* listaChamadasP = NULL;
     lista* listaChamadasNP = NULL;
     lista* listaViatura = NULL;
     lista* listaPMs = NULL;
-    //lista* listaPessoa = NULL;
+    lista* listaPessoa = NULL;
     int op;
-    
+    viatura *atual = NULL;
     lerPoliciais(listaPMs);
     lerViaturas(listaViatura);
-    //lerPessoas(listaPessoa);
+    lerPessoas(listaPessoa);
 
     //Declaração do CPF para usar na função Pesquisar por CPF.
     int cpf_pessoa;
@@ -175,20 +197,17 @@ int main(){
             printf("Opcao: ");
             scanf("%d", &op);
             
-            //Caso essa diferenciação seja necessária, é melhor fazer desse primeiro jeito.
-            
             if (op == 1)
             {   
                 viatura* temp;
                 // validar codigo da viatura regular
                 while (1)
                 {
-                    //Necessário validar com o arquivo viaturas.txt? Acredito que seja. -sim
                     printf("Código da Viatura: ");
                     scanf("%d", &cod_viatura);
                     temp = (buscaViatura(listaViatura, cod_viatura));
-                    // se existir mas nao for regular??
                     
+                    // se existir mas nao for regular??
                     if(temp != NULL){
                         if (temp->tipoBool == 1) // 1 para regular
                             break;
@@ -202,31 +221,43 @@ int main(){
                 {
                     printf("Quantidade de PMs: ");
                     scanf("%d", &qtd_pms);   
-                    if (qtd_pms > 2 && qtd_pms < 4)
+                    if (qtd_pms >= 2 && qtd_pms <= 4)
                         break;
                     printf("Solicitação de embarque negada.\n");
                 } 
 
                 printf("Identificação dos PMs:\n");
-                //ponteiro da lista geral aponta para a listaPMS ou para a geral?
-                //tarefa: fazer verificacao com o banco de dados em .txt (nao eh certeza)
                 int i = 0;
                 char nome_de_guerra[MAX+1];
                 while (i < qtd_pms){
                     scanf(" %[^\n]", nome_de_guerra);
                     if(buscaPolicial(listaPMs, nome_de_guerra)){
-                        //antigo: strcpy((temp->policiais)->nome_de_guerra[i], nome_de_guerra);
                         strcpy(temp->policiais[i], nome_de_guerra);
                         i++;
                         printf("%d nome válido\n", i);
                     } else 
                         printf("Nome inválido\n");
                 }
-
+                atual = temp;
                 op = 1;             
             }
 
             if (op == 2){
+                viatura* temp;
+                // validar codigo da viatura especializada
+                while (1)
+                {
+                    printf("Código da Viatura: ");
+                    scanf("%d", &cod_viatura);
+                    temp = (buscaViatura(listaViatura, cod_viatura));
+                    // se existir mas nao for especializada??
+                    if(temp != NULL){
+                        if (temp->tipoBool == 0) // 0 para especializada
+                            break;
+                    }
+
+                    printf("Erro ao ler viatura\n");
+                } 
                 printf("Quantidade de PMs: 4 (especial)\n");
                 qtd_pms = 4;
                 printf("Identificação dos PMs:\n");
@@ -235,13 +266,14 @@ int main(){
                 while (i < qtd_pms){
                     scanf(" %[^\n]", nome_de_guerra);
                     if(buscaPolicial(listaPMs, nome_de_guerra)){
-                        strcpy(temp->policiais[i], nome_de_guerra)
+                        strcpy(temp->policiais[i], nome_de_guerra);
                         i++;
                         printf("%d nome válido\n", i);
                     } else 
                         printf("Nome inválido\n");
                 }
-                op = 2;
+                atual = temp;
+                op = 1;
             }
             
             //ETAPA 3
@@ -251,71 +283,60 @@ int main(){
             // mesma variavel para submenu dá conflito?? nao, mas ao fim de todo caso, retornar op ao valor inicial.
             scanf("%d", &op);
 
+            // do {} while (op != 1)
             if (op == 1){
-                //Caso em que não há chamadas policiais.
+                // Caso em que não há chamadas policiais.
+                // listaChamada == NULL
                 if(chamada_policial == false){    
                     printf("\nViatura direcionada para rondas, no aguardo de chamadas policiais.");
+                    // temp->statusLivre = true;
                     printf("\n1 - Voltar para o Menu Principal");
                     printf("\nOpcao: ");
                     scanf("%d", &op);
+                    continue;
 
-                    if (op == 1)
-                        continue;
-                }
-                //Criação do menu, caso haja chamadas policiais. As infos devem vir de outro lugar, acredito.
-                else{
-                    printf("\nDescrição: ");
-                    printf("\nLocalização: \n");
-
+                } else {
+                    // printf("\nDescrição: %s", );
+                    // printf("\nLocalização: %s\n", );
                     printf("\n1 - Confirmada Ação Policial");
-                    printf("\n2 - Ação Policial Dispensada\n");
-                    
+                    printf(" 2 - Ação Policial Dispensada\n");
                     printf("Opcao: ");
                     scanf("%d", &op);
 
                     //Caso em que a Ação Policial é confirmada. Tentativa de usar SWITCH
-                    switch (op)
-                    {
-                    case 1:
+                    do {
                         printf("\n1 - Pesquisar por CPF");
                         printf("\n2 - Solicitar Reforços");
                         printf("\n3 - Prisão em Andamento");
-                        printf("\n4 - Encerrar Ocorrência");
+                        printf("\n4 - Encerrar Ocorrência\n");
+                        scanf("%d", &op);
 
                         switch (op)
                         {
-                            //Manipulação do arquivo pessoas.txt
                             case 1:
-                                printf("\nCPF: ");
-                                scanf("%d", &cpf_pessoa);
-                                
-                                //Enquanto a função não estiver pronta.
-                                continue;
-
-
+                                printf("CPF: ");
+                                scanf(" %s", cpf_pessoa);
+                                buscaCPF(listaPessoa, cpf_pessoa);
+                                printf("1- Encerrar visualizacao\n");
+                                scanf("%d", &op);
+                                break;
+                            
+                            case 2:
+                                break;
                         }
 
-                    //Precisa ser consertado pois, após apertar 2, o programa deveria voltar para a etapa 3, não para o menu inicial.
-                    case 2:
-                        continue;
-                    }
+                    } while (op != 4);
                 }
-                
-            }
-
-            else{
-                continue;
-
-            }
-
-            op = 1;
-
+                    op = 1;
+            } 
+        
         // COPOM
         } else if (op == 3){
+        
             // 1. verificar se ha pedido de reforco
 
             //cadastrar chamada
-            chamada *aux; 
+            chamada *aux = (chamada*)calloc(1, sizeof(chamada)); 
             
             printf("Policia normal - 1  Especializada - 2: ");
             scanf("%d", &aux->tipo);
@@ -338,9 +359,8 @@ int main(){
 
                 op = 3;
             // se for policia especializada
-            } else {
+            } else 
                 inserir(listaChamadasP, aux);
-            }
             
         }
 
@@ -351,4 +371,5 @@ int main(){
     desalocar(listaChamadasNP);
     desalocar(listaViatura);
     desalocar(listaPMs);
+    desalocar(listaPessoa);
 }
