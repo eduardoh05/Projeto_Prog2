@@ -138,6 +138,7 @@ policial* buscaPolicial(lista *lst, char *nomeGuerra){
 
 void buscaCPF(lista *lst, char *cpf){
     lista *p = lst;
+    int qtdPassagens, qtdInad;
     for (; p != NULL; p = p->prox){
         if (strcmp(((pessoa*)p->chave)->cpf, cpf) == 0){
             printf("Nome: %s\n", ((pessoa*)p->chave)->nome);
@@ -145,10 +146,13 @@ void buscaCPF(lista *lst, char *cpf){
             printf("Cidade: %s\n", ((pessoa*)p->chave)->cidade);
             printf("Idade: %d\n", ((pessoa*)p->chave)->idade);
             printf("Quantidade de passagens: %d\n", ((pessoa*)p->chave)->qtdPassagens);
+            qtdPassagens = ((pessoa*)p->chave)->qtdPassagens;
             for (int i = 0; i < qtdPassagens; i++)
                 printf("%s\n", ((pessoa*)p->chave)->passagens[i]);
             printf("Quantidade de inadimplencias: %d\n", ((pessoa*)p->chave)->qtdInad);
-            for (int i = 0; i < qtdPassagens; i++)
+
+            qtdInad = ((pessoa*)p->chave)->qtdInad;
+            for (int i = 0; i < qtdInad; i++)
                 printf("%s\n", ((pessoa*)p->chave)->inadimplencias[i]);
             return;
         }
@@ -170,7 +174,7 @@ int main(){
     lerPessoas(listaPessoa);
 
     //Declaração do CPF para usar na função Pesquisar por CPF.
-    int cpf_pessoa;
+    char cpf_pessoa[12];
 
     do
     {
@@ -286,7 +290,7 @@ int main(){
             // do {} while (op != 1)
             if (op == 1){
                 // Caso em que não há chamadas policiais.
-                // listaChamada == NULL
+                // listaChamadaP ou listaChamadaNP == NULL
                 if(chamada_policial == false){    
                     printf("\nViatura direcionada para rondas, no aguardo de chamadas policiais.");
                     // temp->statusLivre = true;
@@ -330,8 +334,16 @@ int main(){
                     op = 1;
             } 
         
+        } else if (op == 2) {
+            int cod_viatura;
+
+            printf("Viatura em uso\n");
+            printf("Identificador da viatura: ");
+            scanf("%d", &cod_viatura);
+        }
+
         // COPOM
-        } else if (op == 3){
+        else if (op == 3){
         
             // 1. verificar se ha pedido de reforco
 
@@ -372,4 +384,5 @@ int main(){
     desalocar(listaViatura);
     desalocar(listaPMs);
     desalocar(listaPessoa);
+
 }
