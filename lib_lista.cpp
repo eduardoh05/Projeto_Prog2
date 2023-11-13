@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 void inserir(lista*& lst, void* chave){
-    lista *p; // ta certo mesmo? 
+    lista *p; 
     lista* novo = (lista*)calloc(1, sizeof(lista));
     novo->chave = chave;
     novo->prox = NULL;
@@ -38,4 +38,26 @@ void desalocar(lista*& lst){
         free(aux->chave);
         free(aux);
     }
+}
+
+chamada* removerChamada(lista *&lst, int tipo){
+    lista *p = NULL;
+    lista *q = lst;
+
+    while(q != NULL && ((chamada*)q->chave)->tipo != tipo){
+        p = q;
+        q = q->prox;
+    }
+    if (q == NULL)
+        return NULL;
+    else {
+        if (p == NULL)
+            p->prox = q->prox;
+        else
+            lst = q->prox;
+    }
+    chamada *chamado = (chamada*)malloc(sizeof(chamada));
+    chamado = (chamada*)q;
+    free(q);
+    return chamado; // posso fazer isso?
 }

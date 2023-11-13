@@ -32,6 +32,7 @@ struct viatura{
     char policiais[4][MAX+1];
     char tipo[15];
     bool statusLivre = true;
+    int emUso = 0;
     bool usada = false;
 };
 
@@ -49,3 +50,4 @@ struct pessoa{
 void inserir(lista*& lst, void* chave);
 void inserirComeco(lista*& lst, void* chave);
 void desalocar(lista*& lst);
+chamada* removerChamada(lista*& lst, int tipo);

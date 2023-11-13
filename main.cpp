@@ -34,7 +34,7 @@ void lerPoliciais(lista*& lst){
         return;
     }
     char nome_aux[MAX+1];
-    int cpf_aux;
+    char cpf_aux[12];
     char nome_de_guerra_aux[MAX+1];
     char cidade_aux[MAX+1];
     int idade_aux;
@@ -44,7 +44,7 @@ void lerPoliciais(lista*& lst){
     policial* aux;
     while (feof(arq) == 0){
         fscanf(arq, " %[^\n]", nome_aux);
-        fscanf(arq, "%d", &cpf_aux);
+        fscanf(arq, " %[^\n]", cpf_aux);
         fscanf(arq, " %[^\n]", nome_de_guerra_aux);
         fscanf(arq, " %[^\n]", cidade_aux);
         fscanf(arq, "%d", &idade_aux);
@@ -53,7 +53,7 @@ void lerPoliciais(lista*& lst){
 
         aux = (policial*) calloc(1, sizeof(policial));
         strcpy(aux->nome, nome_aux);
-        aux->cpf = cpf_aux;
+        strcpy(aux->cpf, cpf_aux);
         strcpy(aux->nome_de_guerra, nome_de_guerra_aux);
         strcpy(aux->cidade, cidade_aux);
         aux->idade = idade_aux;
@@ -126,6 +126,7 @@ viatura* buscaViatura(lista* lst, int cod){
 
 policial* buscaPolicial(lista *lst, char *nomeGuerra){
     lista *p = lst;
+
     for (; p != NULL; p = p->prox){
         // se nomeGuerra existir na lista de policiais
         if (strcmp(((policial*)p->chave)->nome_de_guerra, nomeGuerra) == 0){
@@ -192,7 +193,7 @@ char *criptografar(char *senha){
 policial* loginPM(lista *lst){
     policial* temp;
     char nomeGuerra[MAX+1];
-    char senha[MAX+1], senhaC[MAX+1];
+    char senha[MAX+1];
     while(1){
         printf("Digite seu nome de guerra (digite 1 para sair): ");
         scanf("%s", nomeGuerra);
@@ -228,13 +229,11 @@ int main(){
     lista* listaPMs = NULL;
     lista* listaPessoa = NULL;
     int op;
-    viatura *atual = NULL;
     lerPoliciais(listaPMs);
     lerViaturas(listaViatura);
     lerPessoas(listaPessoa);
 
     //Declaração do CPF para usar na função Pesquisar por CPF.
-    char cpf_pessoa[12];
 
     do
     {
@@ -251,8 +250,6 @@ int main(){
         if (op == 1)
         {
             int qtd_pms, cod_viatura;
-            policial* pm = NULL;
-
 
             //ETAPA 1
             printf("\nPolicia Regular - 1");
@@ -301,7 +298,6 @@ int main(){
                     } else 
                         printf("Nome inválido\n");
                 }
-                atual = temp;
                 op = 1;   
                 
             } else if (op == 2){
@@ -327,78 +323,83 @@ int main(){
                 char nome_de_guerra[MAX+1];
                 while (i < qtd_pms){
                     scanf(" %[^\n]", nome_de_guerra);
-                    if(buscaPolicial(listaPMs, nome_de_guerra)){
+                    if(buscaPolicial(listaPMs, nome_de_guerra) != NULL){
                         strcpy(temp->policiais[i], nome_de_guerra);
                         i++;
                         printf("%d nome válido\n", i);
                     } else 
                         printf("Nome inválido\n");
                 }
-                atual = temp;
+                
                 op = 1;
             }
             
             //ETAPA 3
-            printf("\n1 - Apto para atender ocorrência");
-            printf("\n2 - Cancelar Embarcação\n");
-            printf("Opcao: ");
-            scanf("%d", &op);
+            do {
+                printf("\n1 - Apto para atender ocorrência");
+                printf("\n2 - Cancelar Embarcação\n");
+                printf("Opcao: ");
+                scanf("%d", &op);
 
-            // do {} while (op != 1) para retornar a Etapa 3
-            if (op == 1){
-                // Caso em que não há chamadas policiais.
-                // alterar condicao para cada tipo de viatura
-                if(listaChamadasP == NULL && listaChamadasNP == NULL){    
-                    printf("\nViatura direcionada para rondas, no aguardo de chamadas policiais.");
-                    // temp->statusLivre = true;
-                    printf("\n1 - Voltar para o Menu Principal");
-                    printf("\nOpcao: ");
-                    scanf("%d", &op);
-                    continue;
-
-                } else {
-                    // printf("\nDescrição: %s", );
-                    // printf("\nLocalização: %s\n", );
-                    printf("\n1 - Confirmada Ação Policial");
-                    printf(" 2 - Ação Policial Dispensada\n");
-                    printf("Opcao: ");
-                    scanf("%d", &op);
-
-                    //Caso em que a Ação Policial é confirmada. Tentativa de usar SWITCH
-                    do {
-                        // temp->usada = true; (viatura usada, para relatorio oficial)
-                        printf("\n1 - Pesquisar por CPF");
-                        printf("\n2 - Solicitar Reforços");
-                        printf("\n3 - Prisão em Andamento");
-                        printf("\n4 - Encerrar Ocorrência\n");
+                if (op == 1){
+                    // Caso em que não há chamadas policiais.
+                    // alterar condicao para cada tipo de viatura
+                    // se for viatura regular e listaChamadasNP == null
+                    // se for viatura regular prioritaria e listaChamadasP nao houver chamadas para regular
+                    // se for viatura especializada e listaChamadaP nao houver chamadas para especializada
+                    // if()
+                    if(listaChamadasP == NULL && listaChamadasNP == NULL){    
+                        printf("\nViatura direcionada para rondas, no aguardo de chamadas policiais.");
+                        printf("\n1 - Voltar para o Menu Principal");
+                        printf("\nOpcao: ");
+                        scanf("%d", &op);
+                        continue;
+                    } else {
+                        // printf("\nDescrição: %s", );
+                        // printf("\nLocalização: %s\n", );
+                        printf("\n1 - Confirmada Ação Policial");
+                        printf(" 2 - Ação Policial Dispensada\n");
+                        printf("Opcao: ");
                         scanf("%d", &op);
 
-                        switch (op)
-                        {
-                            case 1:
-                                printf("CPF: ");
-                                scanf(" %s", cpf_pessoa);
-                                buscaCPF(listaPessoa, cpf_pessoa);
-                                printf("1- Encerrar visualizacao\n");
-                                scanf("%d", &op);
-                                break;
-                            
-                            case 2:
-                                printf("Opcao invalida\n");
-                                break;
+                        //Caso em que a Ação Policial é confirmada. Tentativa de usar SWITCH
+                        do {
+                            // temp->usada = true; (viatura usada, para relatorio oficial)
+                            printf("\n1 - Pesquisar por CPF");
+                            printf("\n2 - Solicitar Reforços");
+                            printf("\n3 - Prisão em Andamento");
+                            printf("\n4 - Encerrar Ocorrência\n");
+                            scanf("%d", &op);
 
-                            case 3: 
-                                printf("Opcao invalida\n");
-                                break;
-                        }
+                            switch (op)
+                            {
+                                case 1:
+                                    char cpf_pessoa[12];
+                                    printf("CPF: ");
+                                    scanf(" %s", cpf_pessoa);
+                                    buscaCPF(listaPessoa, cpf_pessoa);
+                                    printf("1- Encerrar visualizacao\n");
+                                    scanf("%d", &op);
+                                    break;
+                                
+                                case 2:
+                                    printf("Opcao invalida\n");
+                                    break;
 
-                    } while (op != 4);
-                    printf("Ocorrencia encerrada\n");
+                                case 3: 
+                                    printf("Opcao invalida\n");
+                                    break;
+                            }
+
+                        } while (op != 4);
+                        printf("Ocorrencia encerrada\n");
+                    }
+                    op = 1;
+                } else {
+                    printf("Opção inválida\n");
                 }
-                op = 1;
-            } else if (op == 2){
-                // resetar valores
-            } 
+            } while (op != 2);
+            
         
         } else if (op == 2) {
             int cod_viatura;
@@ -414,6 +415,7 @@ int main(){
                     break;
                 printf("Codigo de viatura invalido\n");
             }
+            
             if (temp){
                 if (temp->statusLivre)
                     printf("Viatura em modo ronda");
