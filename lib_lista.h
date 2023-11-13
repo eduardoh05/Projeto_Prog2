@@ -14,6 +14,7 @@ struct policial{
     int idade;
     char cargo[MAX+1];
     char senha[MAX+1];
+    int contOcorrencia = 0;
     char boletimOcorrencia[51];
 };
 
@@ -22,6 +23,7 @@ struct chamada{
     int qtd_viaturas;
     char desc[MAX+1];
     char local[MAX+1];
+    int cod_viatura[]; // posso fazer alocacao dinamica aqui?
 };
 
 struct viatura{
@@ -29,8 +31,8 @@ struct viatura{
     bool tipoBool;
     char policiais[4][MAX+1];
     char tipo[15];
-    bool statusLivre = false;
-    // struct chamada chamadaV;
+    bool statusLivre = true;
+    bool usada = false;
 };
 
 struct pessoa{

@@ -197,11 +197,13 @@ policial* loginPM(lista *lst){
         printf("Digite seu nome de guerra (digite 1 para sair): ");
         scanf("%s", nomeGuerra);
         if (strcmp(nomeGuerra, "1") == 0)
-            break;
+            return NULL;
 
         temp = buscaPolicial(lst, nomeGuerra);
         if (!temp)
             printf("Nome invalido\n");
+        else   
+            break;
     }
 
     while(1){
@@ -209,13 +211,12 @@ policial* loginPM(lista *lst){
         scanf("%s", senha);
         strcpy(senha, criptografar(senha));
         if (strcmp(nomeGuerra, "1") == 0)
-            break;
+            return NULL;
 
         if (strcmp(senha, temp->senha)){
             printf("Login bem sucedido\n");
             return temp;
         }
-
         printf("Senha invalida\n");
     }
 }
@@ -250,9 +251,8 @@ int main(){
         if (op == 1)
         {
             int qtd_pms, cod_viatura;
-            
-            //Inicialização com true para testar a função de BUSCA DE CPF.
-            bool chamada_policial = true;
+            policial* pm = NULL;
+
 
             //ETAPA 1
             printf("\nPolicia Regular - 1");
@@ -302,10 +302,9 @@ int main(){
                         printf("Nome inválido\n");
                 }
                 atual = temp;
-                op = 1;             
-            }
-
-            if (op == 2){
+                op = 1;   
+                
+            } else if (op == 2){
                 viatura* temp;
                 // validar codigo da viatura especializada
                 while (1)
@@ -343,14 +342,13 @@ int main(){
             printf("\n1 - Apto para atender ocorrência");
             printf("\n2 - Cancelar Embarcação\n");
             printf("Opcao: ");
-            // mesma variavel para submenu dá conflito?? nao, mas ao fim de todo caso, retornar op ao valor inicial.
             scanf("%d", &op);
 
-            // do {} while (op != 1)
+            // do {} while (op != 1) para retornar a Etapa 3
             if (op == 1){
                 // Caso em que não há chamadas policiais.
-                // listaChamadaP ou listaChamadaNP == NULL
-                if(chamada_policial == false){    
+                // alterar condicao para cada tipo de viatura
+                if(listaChamadasP == NULL && listaChamadasNP == NULL){    
                     printf("\nViatura direcionada para rondas, no aguardo de chamadas policiais.");
                     // temp->statusLivre = true;
                     printf("\n1 - Voltar para o Menu Principal");
@@ -368,6 +366,7 @@ int main(){
 
                     //Caso em que a Ação Policial é confirmada. Tentativa de usar SWITCH
                     do {
+                        // temp->usada = true; (viatura usada, para relatorio oficial)
                         printf("\n1 - Pesquisar por CPF");
                         printf("\n2 - Solicitar Reforços");
                         printf("\n3 - Prisão em Andamento");
@@ -385,20 +384,44 @@ int main(){
                                 break;
                             
                             case 2:
+                                printf("Opcao invalida\n");
+                                break;
+
+                            case 3: 
+                                printf("Opcao invalida\n");
                                 break;
                         }
 
                     } while (op != 4);
+                    printf("Ocorrencia encerrada\n");
                 }
-                    op = 1;
+                op = 1;
+            } else if (op == 2){
+                // resetar valores
             } 
         
         } else if (op == 2) {
             int cod_viatura;
-
-            printf("Viatura em uso\n");
-            printf("Identificador da viatura: ");
-            scanf("%d", &cod_viatura);
+            viatura *temp = NULL;
+            while (1){
+                printf("Viatura em uso\n");
+                printf("Identificador da viatura (digite 1 para sair): ");
+                scanf("%d", &cod_viatura);
+                if (cod_viatura == 1)
+                    break;
+                viatura *temp = buscaViatura(listaViatura, cod_viatura);
+                if (temp != NULL)
+                    break;
+                printf("Codigo de viatura invalido\n");
+            }
+            if (temp){
+                if (temp->statusLivre)
+                    printf("Viatura em modo ronda");
+                else {
+                    printf("Dados da chamada:");
+                    // BUSCA CHAMADA E PROCURA PELO CODIGO DA VIATURA 
+                }
+            }
         }
 
         // COPOM
@@ -419,24 +442,32 @@ int main(){
 
             // se for policiar regular (prioritaria ou nao)
             if (aux->tipo == 1){
-                printf("Prioritaria - 1 Nao prioritaria - 2:");
+                printf("Prioritaria - 1 Nao prioritaria - 2: ");
                 scanf("%d", &op);
                 // regular prioritaria
                 if (op == 1)
                     inserir(listaChamadasP, aux);
                 else
                     inserir(listaChamadasNP, aux);
+                printf("Chamada Registrada\n");
 
                 op = 3;
             // se for policia especializada
-            } else 
+            } else {
                 inserir(listaChamadasP, aux);
+                printf("Chamada Registrada\n");
+            }
+                
             
         } else if (op == 4) {
             policial *temp = loginPM(listaPMs);
-            
-            // checar ocorrencias dele e registrar b.o se faltar
-
+            if (temp == NULL)
+                printf("Login falhou\n");
+            else {
+                printf("Login realizado!!\n");
+                // checar ocorrencias dele e registrar b.o se faltar
+            }
+            free(temp); // necessario?
         }
 
     }while (op != 0);
