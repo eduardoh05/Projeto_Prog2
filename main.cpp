@@ -161,6 +161,65 @@ void buscaCPF(lista *lst, char *cpf){
         printf("CPF nao encontrado.\n");
 }
 
+char *criptografar(char *senha){
+    int tam = strlen(senha);
+    int inicio = 0;
+    int fim = tam - 1;
+    char *senhac = (char*)malloc((tam+1) * sizeof(char));
+
+    // inverte
+    while (inicio < fim) {
+        char temp = senha[inicio];
+        senhac[inicio] = senha[fim];
+        senhac[fim] = temp;
+
+        inicio++;
+        fim--;
+    }
+
+    // substitui
+    for (int i = 0; i < tam; i++) {
+        if ((senhac[i] >= 'a' && senhac[i] <= 'z')) {
+            senhac[i] = 'a' + (senhac[i] - 'a' + 3) % 26;
+        } else if ((senhac[i] >= 'A' && senhac[i] <= 'Z')) {
+            senhac[i] = 'A' + (senhac[i] - 'A' + 3) % 26;
+        }
+    }
+
+    return senhac;
+}
+
+policial* loginPM(lista *lst){
+    policial* temp;
+    char nomeGuerra[MAX+1];
+    char senha[MAX+1], senhaC[MAX+1];
+    while(1){
+        printf("Digite seu nome de guerra (digite 1 para sair): ");
+        scanf("%s", nomeGuerra);
+        if (strcmp(nomeGuerra, "1") == 0)
+            break;
+
+        temp = buscaPolicial(lst, nomeGuerra);
+        if (!temp)
+            printf("Nome invalido\n");
+    }
+
+    while(1){
+        printf("Digite sua senha (digite 1 para sair): ");
+        scanf("%s", senha);
+        strcpy(senha, criptografar(senha));
+        if (strcmp(nomeGuerra, "1") == 0)
+            break;
+
+        if (strcmp(senha, temp->senha)){
+            printf("Login bem sucedido\n");
+            return temp;
+        }
+
+        printf("Senha invalida\n");
+    }
+}
+
 int main(){
     lista* listaChamadasP = NULL;
     lista* listaChamadasNP = NULL;
@@ -344,7 +403,6 @@ int main(){
 
         // COPOM
         else if (op == 3){
-        
             // 1. verificar se ha pedido de reforco
 
             //cadastrar chamada
@@ -374,6 +432,11 @@ int main(){
             } else 
                 inserir(listaChamadasP, aux);
             
+        } else if (op == 4) {
+            policial *temp = loginPM(listaPMs);
+            
+            // checar ocorrencias dele e registrar b.o se faltar
+
         }
 
     }while (op != 0);

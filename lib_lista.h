@@ -14,6 +14,7 @@ struct policial{
     int idade;
     char cargo[MAX+1];
     char senha[MAX+1];
+    char boletimOcorrencia[51];
 };
 
 struct chamada{
